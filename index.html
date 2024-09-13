@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cambios de Bases</title>
+    <style>
+                            body {
+                        font-family: Arial, sans-serif;
+                        background-color: #391880;
+                        margin: 10; /* changed from 1 to 0 */
+                        padding: 0; /* changed from 900 to 0 */
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }
+
+                    .calculator {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgb(0, 0, 0);
+    width: 500px; /* Cambiado de 700% a 500px */
+    max-width: 500px;
+    margin: 0 auto; /* Centra la calculadora horizontalmente */
+    display: block; /* Reemplaza 'float' para un centrado mejor */
+    padding: 20px; /* Agrega espacio dentro del recuadro de la calculadora */
+}
+
+
+                    .calculator h1 {
+                        text-align: center;
+                    }
+
+                    .calculator input[type="text"], .calculator select {
+                        width: 100%;
+                        padding: 10px;
+                        margin: 10px 0;
+                        border: 1px solid #000000;
+                        border-radius: 4px;
+                        font-size: 16px;
+                    }
+
+                    .calculator button {
+                        width: 100%;
+                        padding: 10px;
+                        margin: 10px 0;
+                        background-color: #60b3e7;
+                        border: none;
+                        color: #000000;
+                        font-size: 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+
+                    .calculator button:hover {
+                        background-color: #cebaba;
+                    }
+
+                    .result {
+                        background: #dbc7c7;
+                        padding: 10px;
+                        border: 1px solid #7a5e5e;
+                        border-radius: 4px;
+                        margin-top: 10px;
+                    }
+
+                    /* added to align the margins inside the calculator */
+                    .calculator * {
+                        box-sizing: border-box;
+                        margin: 0 20px; /* added to give some space between elements */
+                    }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Calculadora de Cambios de Bases</h1>
+        <label for="conversionType">Seleccione el tipo de conversión:</label>
+        <select id="conversionType">
+            <option value="decimal">Decimal</option>
+            <option value="binary">Binario</option>
+            <option value="octal">Octal</option>
+            <option value="hexadecimal">Hexadecimal</option>
+        </select>
+
+        <label for="inputNumber">Ingrese el número:</label>
+        <input type="text" id="inputNumber" placeholder="Número a convertir">
+
+        <button onclick="convert()">Convertir</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function convert() {
+            const conversionType = document.getElementById('conversionType').value;
+            const inputNumber = document.getElementById('inputNumber').value.trim();
+            const resultDiv = document.getElementById('result');
+    
+            let result = '';
+
+  if (conversionType === 'decimal') {
+    let decimalNumber = 0;
+    for (let i = 0; i < inputNumber.length; i++) {
+      decimalNumber = decimalNumber * 10 + (inputNumber[i] - '0');
+    }
+    if (decimalNumber >= 0) {
+      let binary = '';
+      let temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 2;
+        binary = remainder + binary;
+        temp = (temp - remainder) / 2;
+      }
+      let octal = '';
+      temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 8;
+        octal = remainder + octal;
+        temp = (temp - remainder) / 8;
+      }
+      let hexadecimal = '';
+      temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 16;
+        if (remainder < 10) {
+          hexadecimal = remainder + hexadecimal;
+        } else {
+          let hexChar = '';
+          if (remainder === 10) hexChar = 'A';
+          if (remainder === 11) hexChar = 'B';
+          if (remainder === 12) hexChar = 'C';
+          if (remainder === 13) hexChar = 'D';
+          if (remainder === 14) hexChar = 'E';
+          if (remainder === 15) hexChar = 'F';
+          hexadecimal = hexChar + hexadecimal;
+        }
+        temp = (temp - remainder) / 16;
+      }
+      result = `
+        Decimal a Binario: ${binary}<br>
+        Decimal a Octal: ${octal}<br>
+        Decimal a Hexadecimal: ${hexadecimal}
+      `;
+    } else {
+      result = 'Número decimal inválido.';
+    }
+  } else if (conversionType === 'binary') {
+    let decimalNumber = 0;
+    for (let i = 0; i < inputNumber.length; i++) {
+      decimalNumber = decimalNumber * 2 + (inputNumber[i] === '1' ? 1 : 0);
+    }
+    if (decimalNumber >= 0) {
+      let octal = '';
+      let temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 8;
+        octal = remainder + octal;
+        temp = (temp - remainder) / 8;
+      }
+      let hexadecimal = '';
+      temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 16;
+        if (remainder < 10) {
+          hexadecimal = remainder + hexadecimal;
+        } else {
+          let hexChar = '';
+          if (remainder === 10) hexChar = 'A';
+          if (remainder === 11) hexChar = 'B';
+          if (remainder === 12) hexChar = 'C';
+          if (remainder === 13) hexChar = 'D';
+          if (remainder === 14) hexChar = 'E';
+          if (remainder === 15) hexChar = 'F';
+          hexadecimal = hexChar + hexadecimal;
+        }
+        temp = (temp - remainder) / 16;
+      }
+      result = `
+        Binario a Decimal: ${decimalNumber}<br>
+        Binario a Octal: ${octal}<br>
+        Binario a Hexadecimal: ${hexadecimal}
+      `;
+    } else {
+      result = 'Número binario inválido.';
+    }
+  } else if (conversionType === 'octal') {
+    let decimalNumber = 0;
+    for (let i = 0; i < inputNumber.length; i++) {
+      decimalNumber = decimalNumber * 8 + (inputNumber[i] - '0');
+    }
+    if (decimalNumber >= 0) {
+      let binary = '';
+      let temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 2;
+        binary = remainder + binary;
+        temp = (temp - remainder) / 2;
+      }
+      let hexadecimal = '';
+      temp = decimalNumber;
+      while (temp > 0) {
+        let remainder = temp % 16;
+        if (remainder < 10) {
+          hexadecimal = remainder + hexadecimal;
+        } else {
+          let hexChar = '';
+          if (remainder === 10) hexChar = 'A';
+          if (remainder === 11) hexChar = 'B';
+          if (remainder === 12) hexChar = 'C';
+          if (remainder === 13) hexChar = 'D';
+          if (remainder === 14) hexChar = 'E';
+          if (remainder === 15) hexChar = 'F';
+          hexadecimal = hexChar + hexadecimal;
+        }
+        temp = (temp - remainder) / 16;
+      }
+      result = `
+        Octal a Decimal: ${decimalNumber}<br>
+        Octal a Binario: ${binary}<br>
+        Octal a Hexadecimal: ${hexadecimal}
+      `;
+    } else {
+      result = 'Número octal inválido.';
+    }
+  } else if (conversionType === 'hexadecimal') {
+  let decimalNumber = 0;
+  for (let i = 0; i < inputNumber.length; i++) {
+    let hexValue = inputNumber[i];
+    if (hexValue >= '0' && hexValue <= '9') {
+      decimalNumber = decimalNumber * 16 + (hexValue - '0');
+    } else if (hexValue === 'A' || hexValue === 'a') {
+      decimalNumber = decimalNumber * 16 + 10;
+    } else if (hexValue === 'B' || hexValue === 'b') {
+      decimalNumber = decimalNumber * 16 + 11;
+    } else if (hexValue === 'C' || hexValue === 'c') {
+      decimalNumber = decimalNumber * 16 + 12;
+    } else if (hexValue === 'D' || hexValue === 'd') {
+      decimalNumber = decimalNumber * 16 + 13;
+    } else if (hexValue === 'E' || hexValue === 'e') {
+      decimalNumber = decimalNumber * 16 + 14;
+    } else if (hexValue === 'F' || hexValue === 'f') {
+      decimalNumber = decimalNumber * 16 + 15;
+    }
+  }
+  if (decimalNumber >= 0) {
+    let binary = '';
+    let temp = decimalNumber;
+    while (temp > 0) {
+      let remainder = temp % 2;
+      binary = remainder + binary;
+      temp = (temp - remainder) / 2;
+    }
+    let octal = '';
+    temp = decimalNumber;
+    while (temp > 0) {
+      let remainder = temp % 8;
+      octal = remainder + octal;
+      temp = (temp - remainder) / 8;
+    }
+    result = `
+      Hexadecimal a Decimal: ${decimalNumber}<br>
+      Hexadecimal a Binario: ${binary}<br>
+      Hexadecimal a Octal: ${octal}
+    `;
+  } else {
+    let decimalNumber = 0;
+    for (let i = 0; i < inputNumber.length; i++) {
+      let hexValue = inputNumber[i];
+      if (hexValue >= '0' && hexValue <= '9') {
+        decimalNumber = decimalNumber * 16 + (hexValue - '0');
+      } else if (hexValue === 'A' || hexValue === 'a') {
+        decimalNumber = decimalNumber * 16 + 10;
+      } else if (hexValue === 'B' || hexValue === 'b') {
+        decimalNumber = decimalNumber * 16 + 11;
+      } else if (hexValue === 'C' || hexValue === 'c') {
+        decimalNumber = decimalNumber * 16 + 12;
+      } else if (hexValue === 'D' || hexValue === 'd') {
+        decimalNumber = decimalNumber * 16 + 13;
+      } else if (hexValue === 'E' || hexValue === 'e') {
+        decimalNumber = decimalNumber * 16 + 14;
+      } else if (hexValue === 'F' || hexValue === 'f') {
+        decimalNumber = decimalNumber * 16 + 15;
+      }
+    }
+    let binary = '';
+    let temp = decimalNumber;
+    while (temp > 0) {
+      let remainder = temp % 2;
+      binary = remainder + binary;
+      temp = (temp - remainder) / 2;
+    }
+    let octal = '';
+    temp = decimalNumber;
+    while (temp > 0) {
+      let remainder = temp % 8;
+      octal = remainder + octal;
+      temp = (temp - remainder) / 8;
+    }
+    result = `
+      Hexadecimal a Decimal: ${decimalNumber}<br>
+      Hexadecimal a Binario: ${binary}<br>
+      Hexadecimal a Octal: ${octal}
+    `;
+ 
+ } 
+  }
+        
+  resultDiv.innerHTML = result;
+}
+
+    </script>
+</body>
+</html>
